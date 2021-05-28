@@ -1,4 +1,4 @@
-# Tricks winners
+# Bridge contract
 
 ##  Requirements
 

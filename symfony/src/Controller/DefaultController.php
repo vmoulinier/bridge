@@ -31,7 +31,7 @@ class DefaultController extends AbstractController
             $cases[] = 'NT'.$i;
         }
 
-        foreach ($deals as $key => $deal) {
+        foreach ($deals as $deal) {
             $actions = $deal['actions'];
 
             foreach ($actions as $key => $action) {
@@ -47,6 +47,9 @@ class DefaultController extends AbstractController
                     }
                 }
                 if ('P' === $action && 'P' === $actions[$key+1] && 'P' === $actions[$key + 2]) {
+                    if (0 === $key) {
+                        break;
+                    }
                     $previousKey = $key - 1;
                     $lastContract = $actions[$previousKey];
                     $lastPlays[] = [$previousKey => $lastContract];
@@ -71,7 +74,6 @@ class DefaultController extends AbstractController
                     $result[] = $str;
                 }
             }
-
         }
 
         return new Response(json_encode($result, JSON_HEX_QUOT));
