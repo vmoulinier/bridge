@@ -53,7 +53,7 @@ You can use any API tools, like POSTMAN
 Use JSON data to post to the endpoint
 
 **Payload example**
-
+```json
 [
    {
       "actions":[
@@ -100,6 +100,7 @@ Use JSON data to post to the endpoint
       ]
    }
 ]
+```
 
 # **Response**
 
