@@ -104,4 +104,4 @@ Use JSON data to post to the endpoint
 
 # **Response**
 
-The application return one JSON list of last contract and the player who did it.g
+The application return a JSON list who contain the last contract and the player who did it.
