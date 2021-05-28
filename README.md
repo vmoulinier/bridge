@@ -54,7 +54,8 @@ Use JSON data to post to the endpoint
 
 **Payload example**
 
-     {
+[
+   {
       "actions":[
          "D1",
          "C2",
@@ -98,7 +99,8 @@ Use JSON data to post to the endpoint
          "P"
       ]
    }
+]
 
 # **Response**
 
-The application return one JSON list of last contract and the player who did it.
+The application return one JSON list of last contract and the player who did it.g

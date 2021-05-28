@@ -19,67 +19,32 @@ class DefaultController extends AbstractController
         $data = $request->getContent();
         $deals = json_decode($data, true);
 
-        //C D H S NT
-        $deals = [
-            $deal1 = [
-                'actions' => [
-                    'D1',
-                    'C2',
-                    'H4',
-                    'NT4',
-                    'P',
-                    'P',
-                    'P',
-                ]
-            ],
-            $deal2 = [
-                'actions' => [
-                    'H1',
-                    'NT1',
-                    'D2',
-                    'NT5',
-                    'P',
-                    'P',
-                    'P',
-                ]
-            ],
-            $deal3 = [
-                'actions' => [
-                    'H1',
-                    'NT1',
-                    'D2',
-                    'NT5',
-                    'P',
-                    'P',
-                    'P',
-                ]
-            ],
-            $deal4 = [
-                'actions' => [
-                    'H1',
-                    'NT1',
-                    'D2',
-                    'NT5',
-                    'P',
-                    'P',
-                    'P',
-                ]
-            ],
-        ];
-
-        return new Response(json_encode($deals, JSON_HEX_QUOT));
-
         $lastPlays = [];
         $result = [];
+        $cases = ['P'];
+
+        for ($i=1;$i<=7;$i++) {
+            $cases[] = 'C'.$i;
+            $cases[] = 'D'.$i;
+            $cases[] = 'H'.$i;
+            $cases[] = 'S'.$i;
+            $cases[] = 'NT'.$i;
+        }
 
         foreach ($deals as $key => $deal) {
             $actions = $deal['actions'];
 
             foreach ($actions as $key => $action) {
+                if (!in_array($action, $cases)) {
+                    throw new Exception("L'action n'existe pas !");
+                }
                 if ('P' !== $action && 0 < $key) {
-                    $currentAction = $this->separeNumeric($action);
-                    $previousAction = $this->separeNumeric($actions[$key - 1]);
-                    //TODO verif si le coup est valable par rapport au précédent
+                    $keyCurrentAction = array_search($action, $cases);
+                    $keyPreviousAction = array_search($actions[$key-1], $cases);
+
+                    if ($keyPreviousAction > $keyCurrentAction) {
+                        throw new Exception("Le contrat proposé ne peut pas être plus faible que le précédent !");
+                    }
                 }
                 if ('P' === $action && 'P' === $actions[$key+1] && 'P' === $actions[$key + 2]) {
                     $previousKey = $key - 1;
@@ -92,16 +57,16 @@ class DefaultController extends AbstractController
             foreach ($lastPlays as $lastPlay) {
                 foreach ($lastPlay as $key => $value) {
                     if ($key === 0) {
-                        $str = 'Les joueurs 1 a joué en dernier le contrat : ' . $value;
+                        $str = 'Le joueur 1 a joué en dernier le contrat : ' . $value;
                     }
                     if ($key === 1) {
-                        $str = 'Les joueurs 2 a joué en dernier le contrat : ' . $value;
+                        $str = 'Le joueur 2 a joué en dernier le contrat : ' . $value;
                     }
                     if ($key === 2) {
-                        $str = 'Les joueurs 3 a joué en dernier le contrat : ' . $value;
+                        $str = 'Le joueur 3 a joué en dernier le contrat : ' . $value;
                     }
                     if ($key === 3) {
-                        $str = 'Les joueurs 4 a joué en dernier le contrat : ' . $value;
+                        $str = 'Le joueur 4 a joué en dernier le contrat : ' . $value;
                     }
                     $result[] = $str;
                 }
@@ -110,11 +75,5 @@ class DefaultController extends AbstractController
         }
 
         return new Response(json_encode($result, JSON_HEX_QUOT));
-    }
-
-    private static function separeNumeric($text)
-    {
-        $arr = preg_split('/(?<=[0-9])(?=[a-z]+)/i', $text);
-        return $arr;
     }
 }
